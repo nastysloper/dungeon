@@ -85,8 +85,11 @@ my_dungeon.add_room(:medium_cave, "Medium Cave", "a medium-sized cave",
                     :southeast => :small_cave, :east => :echo_chamber})
 my_dungeon.add_room(:small_cave, "Small Cave", "a small, damp cave",
                    {:northwest => :medium_cave, :southwest => :low_tunnel, :east => :echo_chamber})
-
+my_dungeon.add_room(:low_tunnel, "Low Tunnel", "a spooky, claustrophobic crevice in the rock",
+                   {:west => :large_cave, :north => :medium_cave, :northeast => :small_cave})
+my_dungeon.add_room(:pit, "Pit", "a filthy, foul-smelling pit",
+                   {:west => :antechamber, :northeast => :medium_cave}
 
 # Start the game by placing the player in a room
-my_dungeon.start(:small_cave)
+my_dungeon.start(:entrace)
 #my_dungeon.go(:north)
