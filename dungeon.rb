@@ -16,18 +16,33 @@ class Dungeon
 
     while true
       show_current_description
-      puts "Which direction do you want to go? (enter q or quit to exit)"
-      print "> "
-      direction = gets.chomp
-      if direction == 'quit' || direction == 'q'
-        break
-      end
-      go(direction.to_sym) 
+        puts "Which path do you take? (enter q or quit to exit)"
+        print "> "
+        direction = gets.chomp
+
+        print "Connections are "
+        show_connections(@player.location)
+
+        while @player.connections.has_key?(direction.to_sym) == false
+          puts "You stumble into a wall. Ow!"
+        end
+
+        if direction == 'quit' || direction == 'q'
+          break
+        end
+      
+        go(direction.to_sym) 
     end
   end
 
   def show_current_description
+    # p "find room, player.location", find_room_in_dungeon(@player.location)
+    # p find_room_in_dungeon(@player.location).full_description
     puts find_room_in_dungeon(@player.location).full_description
+  end
+
+  def show_connections(current_room)
+    puts 
   end
 
   def find_room_in_dungeon(reference)
@@ -39,9 +54,9 @@ class Dungeon
   end
 
   def go(direction)
-    puts "You go " + direction.to_s
+    puts "\nYou go " + direction.to_s
     @player.location = find_room_in_direction(direction)
-    show_current_description
+    #show_current_description
   end
 
   class Player
@@ -63,18 +78,25 @@ class Dungeon
     end
 
     def full_description
-      @name + "\n\nYou are in " + @description
+      puts "~~" + @name + "~~" + "\nYou are in " + @description
+      puts "You see a passageway to your ..."
+      puts @connections.keys
     end
+
+    def show_connections
+      print @connections.keys
+    end
+
   end
 
 end
 
 # Create the main dungeon object
 
-my_dungeon = Dungeon.new("Mike Myers")
+my_dungeon = Dungeon.new("Rich Vogt")
 
 # Add rooms to dungeon
-my_dungeon.add_room(:entrance, "Dungeon entrance", "a forbidding and gloomy grotto",
+my_dungeon.add_room(:entrance, "Dungeon entrance", "a forbidding and gloomy grotto. This is the entrance to the cave.",
                    {:left => :antechamber, :right => :large_cave})
 my_dungeon.add_room(:large_cave, "Large Cave", "a large cave",
                    {:west => :entrance, :east => :low_tunnel})
@@ -88,8 +110,10 @@ my_dungeon.add_room(:small_cave, "Small Cave", "a small, damp cave",
 my_dungeon.add_room(:low_tunnel, "Low Tunnel", "a spooky, claustrophobic crevice in the rock",
                    {:west => :large_cave, :north => :medium_cave, :northeast => :small_cave})
 my_dungeon.add_room(:pit, "Pit", "a filthy, foul-smelling pit",
-                   {:west => :antechamber, :northeast => :medium_cave}
-
+                   {:west => :antechamber, :northeast => :medium_cave})
+my_dungeon.add_room(:echo_chamber, "Echo Chamber", "an unnerving, disorienting place",
+                   {:northwest => :medium_cave, :west => :small_cave})
+my_dungeon.add_room(:corridor, "Corridor", "a constricting crevice in the rock",
+                   {:west => :antechamber, :east => :medium_cave})
 # Start the game by placing the player in a room
-my_dungeon.start(:entrace)
-#my_dungeon.go(:north)
+my_dungeon.start(:entrance)
